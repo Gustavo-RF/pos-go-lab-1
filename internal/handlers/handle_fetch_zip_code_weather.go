@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/Gustavo-RF/pos-go-lab-1/internal/web"
 	"github.com/Gustavo-RF/pos-go-lab-1/weather"
 	zipcode "github.com/Gustavo-RF/pos-go-lab-1/zip-code"
 	"github.com/paemuri/brdoc"
@@ -43,7 +44,7 @@ func HandleFetchZipCodeTemp(res http.ResponseWriter, req *http.Request, weatherA
 		return
 	}
 
-	cepFind, err := zipcode.GetZipCode(cep)
+	cepFind, err := zipcode.GetZipCode(cep, web.Request)
 
 	if err != nil {
 		res.WriteHeader(http.StatusNotFound)
@@ -54,7 +55,7 @@ func HandleFetchZipCodeTemp(res http.ResponseWriter, req *http.Request, weatherA
 		return
 	}
 
-	weather, err := weather.GetWeather(cepFind.Localidade, weatherApiKey)
+	weather, err := weather.GetWeather(cepFind.Localidade, weatherApiKey, web.Request)
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadGateway)

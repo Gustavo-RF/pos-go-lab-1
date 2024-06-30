@@ -1,4 +1,4 @@
-package zipcode
+package weather
 
 import (
 	"errors"
@@ -9,13 +9,13 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestGetZipCode(t *testing.T) {
+func TestGetWeather(t *testing.T) {
 	mockRequestFunc := new(web.MockRequestFunc)
-	mockRequestFunc.On("Request", mock.Anything, "GET").Return([]byte(`{"localidade": "São Paulo"}`), nil)
+	mockRequestFunc.On("Request", mock.Anything, "GET").Return([]byte(`{"current": {"temp_c": 25.0}}`), nil)
 
-	resp, err := GetZipCode("01001000", mockRequestFunc.Request)
+	resp, err := GetWeather("London", "test_key", mockRequestFunc.Request)
 	assert.NoError(t, err)
-	assert.Equal(t, "São Paulo", resp.Localidade)
+	assert.Equal(t, float32(25.0), resp.TempC)
 
 	mockRequestFunc.AssertExpectations(t)
 }
@@ -24,7 +24,7 @@ func TestGetWeather_RequestError(t *testing.T) {
 	mockRequestFunc := new(web.MockRequestFunc)
 	mockRequestFunc.On("Request", mock.Anything, "GET").Return(nil, errors.New("request error"))
 
-	_, err := GetZipCode("01001000", mockRequestFunc.Request)
+	_, err := GetWeather("London", "test_key", mockRequestFunc.Request)
 	assert.Error(t, err)
 	assert.Equal(t, "request error", err.Error())
 
@@ -33,11 +33,11 @@ func TestGetWeather_RequestError(t *testing.T) {
 
 func TestFetch(t *testing.T) {
 	mockRequestFunc := new(web.MockRequestFunc)
-	mockRequestFunc.On("Request", mock.Anything, "GET").Return([]byte(`{"localidade": "São Paulo"}`), nil)
+	mockRequestFunc.On("Request", mock.Anything, "GET").Return([]byte(`{"current": {"temp_c": 25.0}}`), nil)
 
-	resp, err := fetch("01001000", mockRequestFunc.Request)
+	resp, err := fetch("test_key", "London", mockRequestFunc.Request)
 	assert.NoError(t, err)
-	assert.Equal(t, "São Paulo", resp.Localidade)
+	assert.Equal(t, float32(25.0), resp.Current.TempC)
 
 	mockRequestFunc.AssertExpectations(t)
 }
@@ -46,20 +46,9 @@ func TestFetch_RequestError(t *testing.T) {
 	mockRequestFunc := new(web.MockRequestFunc)
 	mockRequestFunc.On("Request", mock.Anything, "GET").Return(nil, errors.New("request error"))
 
-	_, err := fetch("01001000", mockRequestFunc.Request)
+	_, err := fetch("test_key", "London", mockRequestFunc.Request)
 	assert.Error(t, err)
 	assert.Equal(t, "request error", err.Error())
 
 	mockRequestFunc.AssertExpectations(t)
-}
-
-func TestFetch_ZipCodeNotFound(t *testing.T) {
-	mockRequester := new(web.MockRequestFunc)
-	mockRequester.On("Request", mock.Anything, "GET").Return([]byte(`{"erro": "true"}`), nil)
-
-	_, err := fetch("00000000", mockRequester.Request)
-	assert.Error(t, err)
-	assert.Equal(t, "zipcode not found", err.Error())
-
-	mockRequester.AssertExpectations(t)
 }

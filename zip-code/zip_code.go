@@ -2,14 +2,16 @@ package zipcode
 
 import (
 	"errors"
+	"fmt"
 
-	"github.com/Gustavo-RF/pos-go-lab-1/internal/web"
 	"github.com/Gustavo-RF/pos-go-lab-1/zip-code/entities"
 )
 
-func GetZipCode(zipcode string) (*entities.ZipCodeResponse, error) {
+type RequestFunc func(url, method string) ([]byte, error)
 
-	zipCodeApiResponse, err := fetch(zipcode)
+func GetZipCode(zipcode string, requestFunc RequestFunc) (*entities.ZipCodeResponse, error) {
+
+	zipCodeApiResponse, err := fetch(zipcode, requestFunc)
 
 	if err != nil {
 		return nil, err
@@ -20,8 +22,9 @@ func GetZipCode(zipcode string) (*entities.ZipCodeResponse, error) {
 	return &response, nil
 }
 
-func fetch(zipcode string) (*entities.ZipCodeApiResponse, error) {
-	res, err := web.Request("https://viacep.com.br/ws/"+zipcode+"/json/", "GET")
+func fetch(zipcode string, requestFunc RequestFunc) (*entities.ZipCodeApiResponse, error) {
+	url := fmt.Sprintf("https://viacep.com.br/ws/%s/json/", zipcode)
+	res, err := requestFunc(url, "GET")
 
 	if err != nil {
 		return nil, err
