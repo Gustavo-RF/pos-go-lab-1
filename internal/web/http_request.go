@@ -1,4 +1,4 @@
-package internal
+package web
 
 import (
 	"io"
@@ -12,7 +12,7 @@ func Request(url, method string) ([]byte, error) {
 		return nil, err
 	}
 
-	req.Header.Set("Accepts", "application/json")
+	req.Header.Set("Accept", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {

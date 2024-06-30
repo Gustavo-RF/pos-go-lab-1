@@ -1,15 +1,13 @@
 package zipcode
 
 import (
-	"github.com/Gustavo-RF/pos-go-lab-1/internal"
+	"errors"
+
+	"github.com/Gustavo-RF/pos-go-lab-1/internal/web"
 	"github.com/Gustavo-RF/pos-go-lab-1/zip-code/entities"
 )
 
-type ZipCodeResponse struct {
-	Localidade string `json:"localidade"`
-}
-
-func GetZipCode(zipcode string) (*ZipCodeResponse, error) {
+func GetZipCode(zipcode string) (*entities.ZipCodeResponse, error) {
 
 	zipCodeApiResponse, err := fetch(zipcode)
 
@@ -17,24 +15,25 @@ func GetZipCode(zipcode string) (*ZipCodeResponse, error) {
 		return nil, err
 	}
 
-	response := ZipCodeResponse{
-		Localidade: zipCodeApiResponse.Localidade,
-	}
+	response := entities.NewZipCodeResponse(zipCodeApiResponse.Localidade)
 
 	return &response, nil
 }
 
 func fetch(zipcode string) (*entities.ZipCodeApiResponse, error) {
-	res, err := internal.Request("https://viacep.com.br/ws/"+zipcode+"/json/", "GET")
+	res, err := web.Request("https://viacep.com.br/ws/"+zipcode+"/json/", "GET")
 
 	if err != nil {
 		return nil, err
 	}
 
 	zipCodeApiResponse, err := entities.NewZipCodeApiResponse(res)
-
 	if err != nil {
 		return nil, err
+	}
+
+	if zipCodeApiResponse.Erro == "true" {
+		return nil, errors.New("zipcode not found")
 	}
 
 	return zipCodeApiResponse, nil

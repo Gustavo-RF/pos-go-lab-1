@@ -1,6 +1,8 @@
 package entities
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type WeatherApiResponse struct {
 	Location Location `json:"location"`

@@ -3,12 +3,12 @@ package entities
 import (
 	"testing"
 
-	"github.com/Gustavo-RF/pos-go-lab-1/internal"
+	"github.com/Gustavo-RF/pos-go-lab-1/internal/web"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRequestShouldReturnValidField(t *testing.T) {
-	res, err := internal.Request("https://viacep.com.br/ws/29092260/json/", "GET")
+	res, err := web.Request("https://viacep.com.br/ws/29092260/json/", "GET")
 
 	assert.Nil(t, err)
 

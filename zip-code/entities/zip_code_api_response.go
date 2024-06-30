@@ -3,6 +3,7 @@ package entities
 import "encoding/json"
 
 type ZipCodeApiResponse struct {
+	Erro        string `json:"erro"`
 	Cep         string `json:"cep"`
 	Logradouro  string `json:"logradouro"`
 	Complemento string `json:"complemento"`
