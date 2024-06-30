@@ -10,4 +10,5 @@ WORKDIR /app
 COPY --from=build /app /usr/bin/server
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /app .
+EXPOSE 8080
 ENTRYPOINT ["./lab-1"]
