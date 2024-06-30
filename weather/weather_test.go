@@ -22,7 +22,7 @@ func TestGetWeather(t *testing.T) {
 
 func TestGetWeather_RequestError(t *testing.T) {
 	mockRequestFunc := new(web.MockRequestFunc)
-	mockRequestFunc.On("Request", mock.Anything, "GET").Return(nil, errors.New("request error"))
+	mockRequestFunc.On("Request", mock.Anything, "GET").Return([]byte{}, errors.New("request error"))
 
 	_, err := GetWeather("London", "test_key", mockRequestFunc.Request)
 	assert.Error(t, err)
@@ -44,7 +44,7 @@ func TestFetch(t *testing.T) {
 
 func TestFetch_RequestError(t *testing.T) {
 	mockRequestFunc := new(web.MockRequestFunc)
-	mockRequestFunc.On("Request", mock.Anything, "GET").Return(nil, errors.New("request error"))
+	mockRequestFunc.On("Request", mock.Anything, "GET").Return([]byte{}, errors.New("request error"))
 
 	_, err := fetch("test_key", "London", mockRequestFunc.Request)
 	assert.Error(t, err)

@@ -8,5 +8,6 @@ type MockRequestFunc struct {
 
 func (m *MockRequestFunc) Request(url, method string) ([]byte, error) {
 	args := m.Called(url, method)
-	return args.Get(0).([]byte), args.Error(1)
+	data, _ := args.Get(0).([]byte)
+	return data, args.Error(1)
 }
