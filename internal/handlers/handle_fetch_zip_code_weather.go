@@ -14,7 +14,7 @@ type Response struct {
 	Message string `json:"message"`
 }
 
-func HandleFetchZipCodeTemp(res http.ResponseWriter, req *http.Request, weatherApiKey string) {
+func HandleFetchZipCodeTemp(res http.ResponseWriter, req *http.Request) {
 	cep := req.URL.Query().Get("cep")
 
 	if cep == "" {
@@ -55,7 +55,7 @@ func HandleFetchZipCodeTemp(res http.ResponseWriter, req *http.Request, weatherA
 		return
 	}
 
-	weather, err := weather.GetWeather(cepFind.Localidade, weatherApiKey, web.Request)
+	weather, err := weather.GetWeather(cepFind.Localidade, web.Request)
 
 	if err != nil {
 		res.WriteHeader(http.StatusBadGateway)
