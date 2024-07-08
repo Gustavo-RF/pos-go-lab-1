@@ -9,8 +9,8 @@ import (
 
 type RequestFunc func(url, method string) ([]byte, error)
 
-func GetWeather(local string, requestFunc RequestFunc) (entities.WeatherResponse, error) {
-	weatherApiResponse, err := fetch(local, requestFunc)
+func GetWeather(local string, requestFunc RequestFunc, weatherApiKey string) (entities.WeatherResponse, error) {
+	weatherApiResponse, err := fetch(local, requestFunc, weatherApiKey)
 	if err != nil {
 		return entities.WeatherResponse{}, err
 	}
@@ -19,9 +19,9 @@ func GetWeather(local string, requestFunc RequestFunc) (entities.WeatherResponse
 	return weatherResponse, nil
 }
 
-func fetch(local string, requestFunc RequestFunc) (*entities.WeatherApiResponse, error) {
+func fetch(local string, requestFunc RequestFunc, weatherApiKey string) (*entities.WeatherApiResponse, error) {
 	localEscaped := url.QueryEscape(local)
-	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=2d29c8f65271404488800806242506&q=%s", localEscaped)
+	url := fmt.Sprintf("http://api.weatherapi.com/v1/current.json?key=%s&q=%s", weatherApiKey, localEscaped)
 
 	res, err := requestFunc(url, "GET")
 	if err != nil {
