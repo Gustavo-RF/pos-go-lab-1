@@ -64,13 +64,18 @@ Resposta
 ```
 
 ## Testes locais
-Para testar localmente, utilize o docker compose:
+No terminal, digite:
 ```
-docker compose up -d
+cp .env.example .env
+```
+Caso necessário, altere a variável ```WEATHER_API_KEY``` para a sua key do weather api.
+
+Para testar, utilize o docker compose:
+```
+docker compose up -d --build
 ```
 
-Acesse localhost:8080 para executar as chamadas
-
+Acesse localhost:8080 para executar as chamadas.
 
 ### Testes unitários
 ```
